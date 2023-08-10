@@ -7,7 +7,7 @@ export default function App() {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        axios.get('https://sthilaire-api-categoriesincomes-crud.onrender.com/Api/categoriesincomes')
+        axios.get('https://saint-api-incomes-crud.onrender.com/Api/incomes')
             .then(response => setCategories(response.data.incomes))
             .catch(error => console.error('Error:', error));
     }, []);
