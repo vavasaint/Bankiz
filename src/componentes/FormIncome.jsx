@@ -1,50 +1,72 @@
-import { useForm } from "react-hook-form";
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
 
-export default function App() {
-    const { register, handleSubmit } = useForm();
-    const [categories, setCategories] = useState([]);
+const IncomeForm = () => {
+  const [incomeData, setIncomeData] = useState({
+    
+    name: '',
+    amount: '',
+    date: '',
+    categoriesincomes: '',
+  });
 
-    useEffect(() => {
-        axios.get('https://saint-api-incomes-crud.onrender.com/Api/incomes')
-            .then(response => setCategories(response.data.incomes))
-            .catch(error => console.error('Error:', error));
-    }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const onSubmit = async (data) => {
-        try {
-            console.log("Data:", data);
+    try {
+      const response = await axios.post('https://saint-api-incomes-crud.onrender.com/Api/incomes', incomeData);
 
-            await axios.get('https://saint-api-incomes-crud.onrender.com/Api/incomes', data);
+      if (response.status === 201) {
+        } else {
+         }
+    } catch (error) {
+    }
+  };
 
-            console.log("Income ");
-        } catch (error) {
-            console.error('Error', error);
-        }
-    };
+  return (
+    <div>
+      <h2>Form Incomes</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Categories Incomes:</label>
+          <input
+            type="text"
+            value={incomeData.categoriesincomes}
+            onChange={(e) => setIncomeData({ ...incomeData, categoriesincomes: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={incomeData.name}
+            onChange={(e) => setIncomeData({ ...incomeData, name: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label>Amount:</label>
+          <input
+            type="number"
+            value={incomeData.amount}
+            onChange={(e) => setIncomeData({ ...incomeData, amount: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label>Date:</label>
+          <input
+            type="date"
+            value={incomeData.date}
+            onChange={(e) => setIncomeData({ ...incomeData, date: e.target.value })}
+            required
+          />
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
+};
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <label>Amount</label>
-                <input {...register("amount")} />
-            </div>
-            <div>
-                <label>Date</label>
-                <input type="date" {...register("date")} />
-            </div>
-            <div>
-                <label>Income Category</label>
-                <select {...register("categoriesincomes")}>
-                    {categories.map(category => (
-                        <option key={category._id} value={category._id}>
-                            {category.title}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <input type="submit" value="Save Income" />
-        </form>
-    );
-}
+export default IncomeForm;
